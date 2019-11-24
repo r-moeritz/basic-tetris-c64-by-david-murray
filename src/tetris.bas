@@ -1,4 +1,6 @@
-   10 poke 53281,0:poke 53280,14
+   10 rem set background to black, border to light blue
+   15 poke 53281,0:poke 53280,14
+   17 rem draw game elements (title, playing field, score board, etc.)
    20 print"{clr}{wht} basic tetris {CBM-A}CCCCCCCCCC{CBM-S}     {CBM-A}CCCCCCC{CBM-S}";
    30 print"     2014     B{blk}{rvon}LLLLLLLLLL{rvof}{wht}{CBM-Q}CCCCC{CBM-W} {lblu}score{wht} B";
    40 print" david murray B{blk}{rvon}LLLLLLLLLL{rvof}{wht}B     B       B";
@@ -30,8 +32,11 @@
   330 poke tf+q,0:poketf+w,0:poketf+e,0:poketf+r,0:return
   340 rem define tetrimino
   350 q=d(p,1):w=d(p,2):e=d(p,3):r=d(p,4):return
+  498 rem d holds the graphics for next piece
+  499 rem ra holds graphics for tetrominos in all possible rotations
   500 dim d(7,4):dim ra(7,4,4)
   510 s=0:l=0:ll=25:p=0:np=0:ro=1:rem score level piece next rotation
+  519 rem fill d (graphics for next piece)
   520 for x=1 to 7:for y=1 to 4
   530 read d(x,y):next y:next x
   540 data 1,41,81,121:rem i piece
@@ -71,9 +76,11 @@
   727 data 41,0,-39,-80:rem z
   728 data -41,0,39,80:rem z
   800 tf=55351:rem tetris field
-  810 for y=1 to 7:forx=1 to 4:for z=1 to 4
+  809 rem fill ra (graphics for all rotations)
+  810 for y=1 to 7:for x=1 to 4:for z=1 to 4
   820 read ra(y,x,z):next z:next x:next y
-  900 np=4:gosub 1120:gosub1140:gosub 5510:goto 5000
+  899 rem start game loop
+  900 np=4:gosub 1120:gosub 1140:gosub 5510:goto 5000
  1000 rem draw next piece
  1010 for x=55605 to 55608:poke x,0:nextx
  1020 for x=55645 to 55648:poke x,0:nextx
@@ -87,6 +94,7 @@
  1140 print"{home}{down}{down}{down}{left}{left}{left}{left}{left}{left}{left}{left}{wht}       {left}{left}{left}{left}{left}{left}{left}"s
  1150 b=int(s/5000):if b<>l then l=b:gosub 1120:ll=25-l*2
  1160 return
+ 4999 rem lower piece, read key, handle keypress
  5000 get a$
  5010 t=t+1:if t=ll then t=0:gosub 5260
  5020 if a$="z"then gosub 5610
@@ -114,9 +122,9 @@
  5280 b=(peek(tf+q)and15)+(peek(tf+w)and15)+(peek(tf+e)and15)+(peek(tf+r)and15)
  5290 if b<>0 then 5310
  5300 gosub 310:return
- 5310 q=q-40:w=w-40:e=e-40:r=r-40:gosub 310:gosub6000:gosub 5510:return
+ 5310 q=q-40:w=w-40:e=e-40:r=r-40:gosub 310:gosub 6000:gosub 5510:return
  5500 rem new piece
- 5510 p=np:c=p+1:np=int(rnd(1)*7)+1:gosub 1010:s=s+5:gosub1140
+ 5510 p=np:c=p+1:np=int(rnd(1)*7)+1:gosub 1010:s=s+5:gosub 1140
  5520 gosub 350:q=q+4:w=w+4:e=e+4:r=r+4:ro=1:gosub 310
  5530 return
  5600 rem rotate piece
